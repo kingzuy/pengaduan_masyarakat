@@ -53,8 +53,9 @@
                                     <x-input-error :messages="$errors->get('password_confirmation')" />
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign
+                                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-1">Sign
                                         up</button>
+                                    <a href="/" class="btn bg-gradient-dark w-100 mb-2">Back</a>
                                 </div>
                             </form>
                         </div>

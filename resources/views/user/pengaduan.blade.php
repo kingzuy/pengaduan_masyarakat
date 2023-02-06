@@ -13,6 +13,23 @@
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <section>
+                        @if (auth()->user()->nik == null || auth()->user()->telp == null)
+                            <div class="flex p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                                role="alert">
+                                <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor"
+                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <div>
+                                    <span class="font-medium">Perhatian !</span> Harap lengkapi data diri anda di <a
+                                        class="font-semibold underline hover:no-underline"
+                                        href="{{ url('/profile') }}">profile</a>
+                                </div>
+                            </div>
+                        @endif
                         <header>
                             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                                 {{ __('Ajukan Pengaduan') }}
@@ -23,14 +40,6 @@
                             </p>
                         </header>
 
-                        @if (auth()->user()->nik == null || auth()->user()->telp == null)
-                            <label class='block font-medium text-sm text-red-700 dark:text-red-300'>
-                                Harap lengkapi NIK dan nomer telepon anda
-                            </label>
-                            <a class="block underline font-medium text-sm text-red-700 dark:text-red-300"
-                                href="{{ route('profile.edit') }}"> Click
-                                di sini untuk melengkapi nik dan no telp</a>
-                        @endif
 
                         <form method="post" action="{{ route('post.pengaduan') }}" class="mt-3 space-y-6"
                             enctype="multipart/form-data">

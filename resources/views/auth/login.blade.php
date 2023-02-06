@@ -42,8 +42,9 @@
                                         aria-label="Password">
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign
-                                        up</button>
+                                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-1">Sign
+                                        in</button>
+                                    <a href="/" class="btn bg-gradient-dark w-100 mb-2">Back</a>
                                 </div>
                             </form>
                         </div>

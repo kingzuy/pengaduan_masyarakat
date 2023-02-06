@@ -25,8 +25,8 @@
                                 {{ Auth::user()->name }}
                             </a>
                             <ul class="dropdown-menu" style="top: 0 !important;" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url('/home') }}">Home</a></li>
+                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url('/pengaduan') }}">Ajukan Pengaduan</a></li>
                                 <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
                                     @csrf
