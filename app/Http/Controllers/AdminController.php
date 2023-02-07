@@ -2,19 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Pengaduan;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.dashboard');
+        $datas = DB::table('pengaduans')
+            ->select(DB::raw('MONTH(created_at) as bulan'), DB::raw('COUNT(*) as jumlah'))
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('bulan')
+            ->orderBy('bulan', 'asc')
+            ->get();
+
+
+        $nama_bulan = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        $pending = Pengaduan::where('status', 'Pending')->get()->count();
+        $proses = Pengaduan::where('status', 'Proses')->get()->count();
+        $finish = Pengaduan::where('status', 'Finish')->get()->count();
+        $masyarakat = User::where('role', '0')->get()->count();
+
+        foreach ($datas as $data) {
+            $data->bulan = $nama_bulan[$data->bulan];
+        }
+
+        return view('admin.dashboard', compact('datas', 'pending', 'proses', 'finish', 'masyarakat'));
     }
 
     public function edit(Request $request): View

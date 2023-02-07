@@ -17,16 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
+// Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
 Route::middleware('auth', 'role:user')->group(function () {
     Route::get('/pengaduan', [PengaduanController::class, 'index']);
     Route::post('/pengaduan', [PengaduanController::class, 'create'])->name('post.pengaduan');
-    Route::get('/home', [UserController::class, 'index']);
+    Route::get('/home', [UserController::class, 'index'])->name('user.home');
 });
 
 Route::middleware('auth')->name('profile.')->group(function () {

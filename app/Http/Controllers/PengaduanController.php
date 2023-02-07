@@ -39,19 +39,24 @@ class PengaduanController extends Controller
             //upload image
             $image = $request->file('image');
             $image->storeAs('public/image', $image->hashName());
+
+            $pengaduan = Pengaduan::create([
+                'image' => $image->hashName(),
+                'laporan' => trim($request->laporan),
+                'user_id' => auth()->user()->id,
+            ]);
         } else {
-            $image = '';
+            $pengaduan = Pengaduan::create([
+                'laporan' => trim($request->laporan),
+                'user_id' => auth()->user()->id,
+            ]);
         }
 
-        $pengaduan = Pengaduan::create([
-            'image' => $image->hashName(),
-            'laporan' => trim($request->laporan),
-            'user_id' => auth()->user()->id,
-        ]);
+
 
         if (!$pengaduan) return redirect()->back()->with('message', 'Data gagal di tambahkan');
 
-        return redirect()->route('/home')->with('message', 'Data berhasil di tambahkan');
+        return redirect()->route('user.home')->with('message', 'Data berhasil di tambahkan');
     }
 
     /**

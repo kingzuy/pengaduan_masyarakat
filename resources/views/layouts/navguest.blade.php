@@ -41,9 +41,9 @@
                         </div>
                     @else
                         @if (request()->is('login'))
-                            <a href="{{ route('register') }}" class="btn btn-sm mb-0 me-1 bg-gradient-light">Sign Up</a>
+                            <a href="{{ route('register') }}" class="btn btn-sm mb-0 me-1 bg-gradient-light">Register</a>
                         @else
-                            <a href="{{ route('login') }}" class="btn btn-sm mb-0 me-1 bg-gradient-light">Sign In</a>
+                            <a href="{{ route('login') }}" class="btn btn-sm mb-0 me-1 bg-gradient-light">Login</a>
                         @endif
                     @endauth
                 </li>

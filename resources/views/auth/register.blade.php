@@ -14,7 +14,7 @@
     </style>
 
     <div class="page-header align-items-start min-vh-100 pt-5 pb-7"
-        style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signup-cover.jpg'); background-position: top; ">
+        style="background-image: url('{{ asset('assets/img/Jakarta.webp') }}'); background-position: top; ">
         <span class="mask bg-gradient-dark opacity-6"></span>
         <div class="container">
             <div class="row justify-content-center">
@@ -53,9 +53,9 @@
                                     <x-input-error :messages="$errors->get('password_confirmation')" />
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-1">Sign
-                                        up</button>
-                                    <a href="/" class="btn bg-gradient-dark w-100 mb-2">Back</a>
+                                    <button type="submit"
+                                        class="btn bg-gradient-dark w-100 my-4 mb-1">Register</button>
+                                    <small>Sudah punya akun? <a href="/login">Login</a></small>
                                 </div>
                             </form>
                         </div>
