@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Pengaduan;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\Pengaduan;
 
 class AdminController extends Controller
 {
@@ -49,6 +50,34 @@ class AdminController extends Controller
         }
 
         return view('admin.dashboard', compact('datas', 'pending', 'proses', 'finish', 'masyarakat'));
+    }
+
+    public function petugas()
+    {
+        $datas = User::where('role', '1')->get();
+
+        return view('admin.petugas', compact('datas'));
+    }
+
+    public function tambahPetugas(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', 'min:6'],
+            'nik' => ['numeric'],
+            'telp' => ['numeric'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'nik' => $request->nik,
+            'telp' => $request->telp,
+        ]);
+
+        // kurang kondisi
     }
 
     public function edit(Request $request): View

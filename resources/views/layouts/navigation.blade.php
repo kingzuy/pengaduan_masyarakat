@@ -19,6 +19,21 @@
                 </div>
             </div>
 
+            <div class="flex">
+                <x-nav-link class="mx-4 ml-6" :active="request()->is('home')" :href="url('/home')">
+                    {{ __('Home') }}
+                </x-nav-link>
+
+                <x-nav-link class="mx-4" :active="request()->is('profile')" :href="route('profile.edit')">
+                    {{ __('Profile') }}
+                </x-nav-link>
+
+                <x-nav-link class="mx-4" :active="request()->is('pengaduan')" :href="url('/pengaduan')">
+                    {{ __('Ajukan Pengaduan') }}
+                </x-nav-link>
+
+            </div>
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
@@ -39,16 +54,9 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="url('/home')">
-                            {{ __('Home') }}
-                        </x-dropdown-link>
 
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <x-dropdown-link :href="url('/pengaduan')">
-                            {{ __('Ajukan Pengaduan') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->

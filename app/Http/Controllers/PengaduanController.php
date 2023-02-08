@@ -54,7 +54,7 @@ class PengaduanController extends Controller
 
 
 
-        if (!$pengaduan) return redirect()->back()->with('message', 'Data gagal di tambahkan');
+        if (!$pengaduan) return redirect()->back()->with('message_error', 'Data gagal di tambahkan');
 
         return redirect()->route('user.home')->with('message', 'Data berhasil di tambahkan');
     }

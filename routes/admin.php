@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/admin/petugas', [AdminController::class, 'petugas'])->name('petugas');
     Route::get('/admin/profile', [AdminController::class, 'edit'])->name('edit');
     Route::patch('/admin/profile', [AdminController::class, 'update'])->name('update');
     Route::delete('/admin/profile', [AdminController::class, 'destroy'])->name('destroy');
