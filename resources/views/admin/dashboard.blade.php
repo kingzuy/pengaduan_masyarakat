@@ -173,8 +173,10 @@
             new Chart(ctx1, {
                 type: "line",
                 data: {
-                    labels: ["Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September",
-                        "Oktober", "November", "Desember"
+                    labels: [
+                        @foreach ($datas as $data)
+                            "{{ $data->bulan }}",
+                        @endforeach
                     ],
                     datasets: [{
                         label: "Jumlah Pengaduan",

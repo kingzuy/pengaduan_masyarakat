@@ -64,10 +64,20 @@ class AdminController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', 'min:6'],
-            'nik' => ['numeric'],
-            'telp' => ['numeric'],
+            'password' => ['required', 'min:6'],
         ]);
+
+        if ($request->nik) {
+            $request->validate([
+                'nik' => ['numeric'],
+            ]);
+        }
+
+        if ($request->telp) {
+            $request->validate([
+                'telp' => ['numeric'],
+            ]);
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -75,9 +85,60 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
             'nik' => $request->nik,
             'telp' => $request->telp,
+            'role' => 1,
         ]);
 
-        // kurang kondisi
+        if (!$user) return redirect()->back()->with('error_message', 'Data gagal di tambahkan');
+
+        return redirect()->back()->with('message', 'Data petugas berhasil di tambahkan');
+    }
+
+    public function editPetugas(Request $request, $id)
+    {
+        $petugas = User::findOrfail($id);
+
+        $request->validate([
+            'name' => ['string', 'max:255'],
+            'username' => ['string', 'max:255', 'unique:' . User::class],
+        ]);
+
+        if ($request->nik) {
+            $request->validate([
+                'nik' => ['numeric'],
+            ]);
+        }
+
+        if ($request->password) {
+            $request->validate([
+                'password' => ['min:6'],
+            ]);
+            $petugas->password = Hash::make($request->password);
+        }
+
+        if ($request->telp) {
+            $request->validate([
+                'telp' => ['numeric'],
+            ]);
+        }
+
+        $petugas->name = $request->name;
+        $petugas->username = $request->username;
+        $petugas->nik = $request->nik;
+        $petugas->telp = $request->telp;
+        $petugas->save();
+
+        if (!$petugas) return redirect()->back()->with('error_message', 'Data ' . $petugas->name . ' gagal di ubah');
+
+        return redirect()->back()->with('message', 'Data ' . $petugas->name . ' berhasil di ubah');
+    }
+
+    public function deletePetugas($id)
+    {
+        $user = User::findOrFail($id)->delete();
+
+        if (!$user) return redirect()->back()->with('error_message', 'Data tidak di temukan');
+
+        return redirect()->back()->with('message', 'Data berhasil di hapus');
     }
 
     public function edit(Request $request): View

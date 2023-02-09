@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pengaduan::class);
     }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = strtoupper($value);
+    }
 }

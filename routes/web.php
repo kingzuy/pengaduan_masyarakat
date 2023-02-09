@@ -23,6 +23,16 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/404', function () {
+    if (auth()->user()->role == 'petugas') {
+        return redirect()->route('author.home');
+    } else if (auth()->user()->role == 'admin') {
+        return redirect()->route('admin.dashboard');
+    } else {
+        return back();
+    }
+});
+
 Route::middleware('auth', 'role:user')->group(function () {
     Route::get('/pengaduan', [PengaduanController::class, 'index']);
     Route::post('/pengaduan', [PengaduanController::class, 'create'])->name('post.pengaduan');

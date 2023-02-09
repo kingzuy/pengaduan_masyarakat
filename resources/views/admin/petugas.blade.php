@@ -74,6 +74,34 @@
                                 </div>
                             </div>
                         </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger text-white text-sm alert-dismissible fade show"
+                                role="alert">
+                                Error :
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close">&times;</button>
+                            </div>
+                        @endif
+                        @if (session('error_message'))
+                            <div class="alert alert-danger text-white alert-dismissible fade show" role="alert">
+                                {{ session('error_message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close">&times;</button>
+                            </div>
+                        @endif
+
+                        @if (session('message'))
+                            <div class="alert alert-success text-white alert-dismissible fade show" role="alert">
+                                {{ session('message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close">&times;</button>
+                            </div>
+                        @endif
                     </div>
                     <div class="card-body p-3">
                         <table class="table table-flush" id="datatable-basic">
@@ -96,7 +124,8 @@
                                     <tr>
                                         <td class="text-sm font-weight-normal">{{ !$data->nik ? 'Null' : $data->nik }}
                                         </td>
-                                        <td class="text-sm font-weight-normal">{{ !$data->name ? 'Null' : $data->name }}
+                                        <td class="text-sm font-weight-normal">
+                                            {{ !$data->name ? 'Null' : $data->name }}
                                         </td>
                                         <td class="text-sm font-weight-normal">
                                             {{ !$data->username ? 'Null' : $data->username }}</td>
@@ -106,7 +135,9 @@
                                             <button type="button" class="btn btn-sm bg-gradient-info"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modal-form{{ $data->id }}">Edit</button>
-                                            <button type="button" class="btn btn-sm bg-gradient-danger">Delete
+                                            <button type="button" class="btn btn-sm bg-gradient-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modal-notification{{ $data->id }}">Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -131,42 +162,83 @@
                                 <p class="mb-0">Silahkan masukan value untuk mengedit data petugas</p>
                             </div>
                             <div class="card-body">
-                                <form role="form text-left">
+                                <form role="form text-left" method="POST"
+                                    action="{{ route('admin.edit.petugas', $data->id) }}">
+                                    @method('PATCH')
+                                    @csrf
+
                                     <label>NIK</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" class="form-control" placeholder="nik" aria-label="nik"
-                                            aria-describedby="nik-addon" value="{{ $data->nik }}">
+                                        <input type="number" name="nik" class="form-control" placeholder="nik"
+                                            aria-label="nik" aria-describedby="nik-addon"
+                                            value="{{ old('nik', $data->nik) }}">
                                     </div>
                                     <label>Name</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="name"
+                                        <input type="text" name="name" class="form-control" placeholder="name"
                                             aria-label="name" aria-describedby="name-addon"
-                                            value="{{ $data->name }}">
+                                            value="{{ old('name', $data->name) }}">
                                     </div>
                                     <label>Username</label>
                                     <div class="input-group mb-3">
-                                        <input type="name" class="form-control" placeholder="username"
-                                            aria-label="username" aria-describedby="username-addon"
-                                            value="{{ $data->username }}">
+                                        <input type="name" name="username" class="form-control"
+                                            placeholder="username" aria-label="username"
+                                            aria-describedby="username-addon"
+                                            value="{{ old('username', $data->username) }}">
                                     </div>
                                     <label>Telp</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" class="form-control" placeholder="telp"
+                                        <input type="number" name="telp" class="form-control" placeholder="telp"
                                             aria-label="telp" aria-describedby="telp-addon"
-                                            value="{{ $data->temp }}">
+                                            value="{{ old('telp', $data->telp) }}">
                                     </div>
                                     <label>Password</label>
                                     <div class="input-group mb-3">
-                                        <input type="email" class="form-control" placeholder="Password"
-                                            aria-label="Password" aria-describedby="password-addon">
+                                        <input type="password" name="password" class="form-control"
+                                            placeholder="Password" aria-label="Password"
+                                            aria-describedby="password-addon">
                                     </div>
                                     <div class="text-center">
-                                        <button type="button"
+                                        <button type="submit"
                                             class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Simpan</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+    @foreach ($datas as $data)
+        <div class="modal fade" id="modal-notification{{ $data->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="modal-notification" aria-hidden="true">
+            <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i class="ni ni-bell-55 ni-3x"></i>
+                            <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
+                            <p>apa anda serius menghapus data
+                                <br>
+                                {{ $data->name }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('admin.delete.petugas', $data->id) }}" method="post">
+                            @method('DELETE')
+                            @csrf
+
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
+                            <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -184,34 +256,38 @@
                             <p class="mb-0">Silahkan masukan value untuk menambahkan data petugas</p>
                         </div>
                         <div class="card-body">
-                            <form role="form text-left" method="POST" action="">
+                            <form role="form text-left" method="POST" action="{{ route('admin.post.petugas') }}">
+                                @csrf
+
                                 <label>NIK</label>
                                 <div class="input-group mb-3">
-                                    <input type="number" class="form-control" placeholder="nik" aria-label="nik"
-                                        aria-describedby="nik-addon">
+                                    <input type="number" name="nik" class="form-control" placeholder="nik"
+                                        aria-label="nik" aria-describedby="nik-addon" value="{{ old('nik') }}">
                                 </div>
                                 <label>Name</label>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="name" aria-label="name"
-                                        aria-describedby="name-addon">
+                                    <input type="text" name="name" class="form-control" placeholder="name"
+                                        aria-label="name" aria-describedby="name-addon" value="{{ old('name') }}">
                                 </div>
                                 <label>Username</label>
                                 <div class="input-group mb-3">
-                                    <input type="name" class="form-control" placeholder="username"
-                                        aria-label="username" aria-describedby="username-addon">
+                                    <input type="name" name="username" class="form-control"
+                                        placeholder="username" aria-label="username"
+                                        aria-describedby="username-addon" value="{{ old('username') }}">
                                 </div>
                                 <label>Telp</label>
                                 <div class="input-group mb-3">
-                                    <input type="number" class="form-control" placeholder="telp" aria-label="telp"
-                                        aria-describedby="telp-addon">
+                                    <input type="number" name="telp" class="form-control" placeholder="telp"
+                                        aria-label="telp" aria-describedby="telp-addon" value="{{ old('telp') }}">
                                 </div>
                                 <label>Password</label>
                                 <div class="input-group mb-3">
-                                    <input type="email" class="form-control" placeholder="Password"
-                                        aria-label="Password" aria-describedby="password-addon">
+                                    <input type="password" name="password" class="form-control"
+                                        placeholder="Password" aria-label="Password"
+                                        aria-describedby="password-addon">
                                 </div>
                                 <div class="text-center">
-                                    <button type="button"
+                                    <button type="submit"
                                         class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Simpan</button>
                                 </div>
                             </form>
