@@ -11,9 +11,9 @@
                     <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white"
                             href="{{ route('admin.dashboard') }}">Admin</a>
                     </li>
-                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Petugas</li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Masyarakat</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0">Petugas</h6>
+                <h6 class="font-weight-bolder text-white mb-0">Masyarakat</h6>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -67,10 +67,10 @@
                         <div class="">
                             <div class="btn-toolbar justify-content-between" role="toolbar"
                                 aria-label="Toolbar with button groups">
-                                <h6 class="text-capitalize">Data Petugas</h6>
+                                <h6 class="text-capitalize">Data Masyarakat</h6>
                                 <div class="input-group">
                                     <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal"
-                                        data-bs-target="#tambah-data">Tambah Petugas</button>
+                                        data-bs-target="#tambah-data">Tambah Masyarakat</button>
                                 </div>
                             </div>
                         </div>
@@ -116,6 +116,9 @@
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Telp
                                     </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Jumlah Laporan
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Action</th>
                                 </tr>
                             </thead>
@@ -131,6 +134,8 @@
                                             {{ !$data->username ? 'Null' : $data->username }}</td>
                                         <td class="text-sm font-weight-normal">
                                             {{ !$data->telp ? 'Null' : $data->telp }}</td>
+                                        <td class="text-sm font-weight-normal">
+                                            {{ !$data->Pengaduan->count() ? 'Null' : $data->Pengaduan->count() }}</td>
                                         <td class="text-sm font-weight-normal">
                                             <button type="button" class="btn btn-sm bg-gradient-info"
                                                 data-bs-toggle="modal"
@@ -164,8 +169,8 @@
                             <div class="card-body">
                                 <form role="form text-left" method="POST"
                                     action="{{ route('admin.edit', $data->id) }}">
-                                    @csrf
                                     @method('PATCH')
+                                    @csrf
 
                                     <label>NIK</label>
                                     <div class="input-group mb-3">

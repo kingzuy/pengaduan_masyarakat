@@ -99,8 +99,13 @@ class AdminController extends Controller
 
         $request->validate([
             'name' => ['string', 'max:255'],
-            'username' => ['string', 'max:255', 'unique:' . User::class],
         ]);
+
+        if ($request->username != $petugas->username) {
+            $request->validate([
+                'username' => ['string', 'max:255', 'unique:' . User::class],
+            ]);
+        }
 
         if ($request->nik) {
             $request->validate([
@@ -134,7 +139,13 @@ class AdminController extends Controller
 
     public function deletePetugas($id)
     {
-        $user = User::findOrFail($id)->delete();
+        $user = User::findOrFail($id);
+
+        if ($user->Pengaduan->count()) {
+            $pengaduan = Pengaduan::where('user_id', $user->id)->update(['old_name' => $user->name, 'old_username' => $user->username]);
+        }
+
+        $user->delete();
 
         if (!$user) return redirect()->back()->with('error_message', 'Data tidak di temukan');
 

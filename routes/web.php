@@ -28,8 +28,10 @@ Route::get('/404', function () {
         return redirect()->route('author.home');
     } else if (auth()->user()->role == 'admin') {
         return redirect()->route('admin.dashboard');
+    } else if (auth()->user()->role == 'user') {
+        return redirect()->route('user.home');
     } else {
-        return back();
+        return redirect()->route('login');
     }
 });
 

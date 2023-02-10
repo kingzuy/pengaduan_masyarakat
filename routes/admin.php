@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MasyarakatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,11 +19,13 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('dashboard');
 
     Route::get('/admin/petugas', [AdminController::class, 'petugas'])->name('petugas');
-    Route::post('/admin/petugas', [AdminController::class, 'tambahPetugas'])->name('post.petugas');
-    Route::patch('/admin/petugas/{id}', [AdminController::class, 'editPetugas'])->name('edit.petugas');
-    Route::delete('/admin/petugas/{id}', [AdminController::class, 'deletePetugas'])->name('delete.petugas');
+    Route::post('/admin/petugas', [AdminController::class, 'tambahPetugas'])->name('post');
+    Route::patch('/admin/petugas/{id}', [AdminController::class, 'editPetugas'])->name('edit');
+    Route::delete('/admin/petugas/{id}', [AdminController::class, 'deletePetugas'])->name('delete');
 
-    Route::get('/admin/profile', [AdminController::class, 'edit'])->name('edit');
-    Route::patch('/admin/profile', [AdminController::class, 'update'])->name('update');
-    Route::delete('/admin/profile', [AdminController::class, 'destroy'])->name('destroy');
+    Route::get('/admin/masyarakat', [MasyarakatController::class, 'index'])->name('masyarakat');
+
+    Route::get('/admin/profile', [AdminController::class, 'edit'])->name('profile.edit');
+    Route::patch('/admin/profile', [AdminController::class, 'update'])->name('profile.update');
+    Route::delete('/admin/profile', [AdminController::class, 'destroy'])->name('profile.destroy');
 });

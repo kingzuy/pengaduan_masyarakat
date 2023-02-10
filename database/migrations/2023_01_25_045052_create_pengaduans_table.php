@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('laporan');
             $table->string('image')->nullable();
             $table->foreignId('user_id');
+            $table->string('old_name')->nullable();
+            $table->string('old_username')->nullable();
             $table->string('status')->default('Pending');
             $table->timestamps();
         });
