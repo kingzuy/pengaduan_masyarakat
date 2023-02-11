@@ -142,7 +142,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
 
         if ($user->Pengaduan->count()) {
-            $pengaduan = Pengaduan::where('user_id', $user->id)->update(['old_name' => $user->name, 'old_username' => $user->username]);
+            $pengaduan = Pengaduan::where('user_id', $user->id)->update(['old_name' => $user->name, 'old_username' => $user->username, 'user_id' => 0]);
         }
 
         $user->delete();

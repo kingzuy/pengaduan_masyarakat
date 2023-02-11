@@ -18,7 +18,9 @@ class PengaduanController extends Controller
      */
     public function index()
     {
-        return view('user.pengaduan');
+        $datas = Pengaduan::latest()->get();
+
+        return view('pengaduan.pengaduan', compact('datas'));
     }
 
     /**

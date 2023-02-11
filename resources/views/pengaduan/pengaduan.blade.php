@@ -11,9 +11,9 @@
                     <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white"
                             href="{{ route('admin.dashboard') }}">Admin</a>
                     </li>
-                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Masyarakat</li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Laporan</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0">Masyarakat</h6>
+                <h6 class="font-weight-bolder text-white mb-0">Laporan</h6>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -67,11 +67,7 @@
                         <div class="">
                             <div class="btn-toolbar justify-content-between" role="toolbar"
                                 aria-label="Toolbar with button groups">
-                                <h6 class="text-capitalize">Data Masyarakat</h6>
-                                <div class="input-group">
-                                    <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal"
-                                        data-bs-target="#tambah-data">Tambah Masyarakat</button>
-                                </div>
+                                <h6 class="text-capitalize">Data Laporan/Pengaduan</h6>
                             </div>
                         </div>
                         @if ($errors->any())
@@ -104,51 +100,52 @@
                         @endif
                     </div>
                     <div class="card-body p-3">
-                        <table class="table table-flush" id="datatable-basic">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NIK
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Name</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Username</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Telp
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Jumlah Laporan
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($datas as $data)
-                                    <tr>
-                                        <td class="text-sm font-weight-normal">{{ !$data->nik ? 'Null' : $data->nik }}
-                                        </td>
-                                        <td class="text-sm font-weight-normal">
-                                            {{ !$data->name ? 'Null' : $data->name }}
-                                        </td>
-                                        <td class="text-sm font-weight-normal">
-                                            {{ !$data->username ? 'Null' : $data->username }}</td>
-                                        <td class="text-sm font-weight-normal">
-                                            {{ !$data->telp ? 'Null' : $data->telp }}</td>
-                                        <td class="text-sm font-weight-normal">
-                                            {{ !$data->Pengaduan->count() ? 'Null' : $data->Pengaduan->count() }}</td>
-                                        <td class="text-sm font-weight-normal">
-                                            <button type="button" class="btn btn-sm bg-gradient-info"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modal-form{{ $data->id }}">Edit</button>
-                                            <button type="button" class="btn btn-sm bg-gradient-danger"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modal-notification{{ $data->id }}">Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        @foreach ($datas as $data)
+                            <!-- Card with an image on left -->
+                            <div class="card mb-3 info-card sales-card">
+                                <div class="row g-0">
+                                    <div class="col-md-2">
+                                        @if ($data->image)
+                                            <img class="img-fluid rounded-start"
+                                                src="{{ asset('storage/image' . $data->image) }}" alt="">
+                                        @else
+                                            <img class="img-fluid rounded-start"
+                                                src="{{ asset('storage/kategori/' . $data->image) }}" alt="">
+                                        @endif
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="card-body">
+                                            @if ($data->user_id != 0)
+                                                <h5 class="card-title">
+                                                    {{ $data->User->name }}<span
+                                                        class="fw-normal">#{{ $data->User->username }}</span>
+                                                </h5>
+                                            @else
+                                                <h5 class="card-title">
+                                                    {{ $data->old_name }}<span
+                                                        class="fw-normal">#{{ $data->old_username }}<br>
+                                                        <span class="text-sm">(user telah dihapu)</span>
+                                                    </span>
+                                                </h5>
+                                            @endif
+                                            <p style="color : black;" class="card-text">
+                                                {!! $data->laporan !!}</p>
+                                            @if ($data->status == 'Process')
+                                                <span class="badge bg-gradient-info">Process</span>
+                                            @elseif ($data->status == 'Done')
+                                                <span class="badge bg-gradient-success">Done</span>
+                                            @else
+                                                <span class="badge bg-gradient-secondary">Pending</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 my-auto">
+                                        <button type="button" class="btn bg-gradient-info">Tanggapan</button>
+                                        <button type="button" class="btn bg-gradient-success">Action</button>
+                                    </div>
+                                </div>
+                            </div><!-- End Card with an image on left -->
+                        @endforeach
                     </div>
                 </div>
             </div>
