@@ -292,7 +292,7 @@
                                         aria-describedby="password-addon">
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit"
+                                    <button type="submit" name="role" value="0"
                                         class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Simpan</button>
                                 </div>
                             </form>

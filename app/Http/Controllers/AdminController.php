@@ -85,7 +85,7 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
             'nik' => $request->nik,
             'telp' => $request->telp,
-            'role' => 1,
+            'role' => $request->role,
         ]);
 
         if (!$user) return redirect()->back()->with('error_message', 'Data gagal di tambahkan');

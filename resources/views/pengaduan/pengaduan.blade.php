@@ -68,6 +68,15 @@
                             <div class="btn-toolbar justify-content-between" role="toolbar"
                                 aria-label="Toolbar with button groups">
                                 <h6 class="text-capitalize">Data Laporan/Pengaduan</h6>
+                                <div class="input-group">
+                                    <select type="button" onchange="filtering()" id="filter"
+                                        class="btn bg-gradient-primary">
+                                        <option value="">Pilih Status</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Proses">Proses</option>
+                                        <option value="Done">Done</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         @if ($errors->any())
@@ -99,18 +108,19 @@
                             </div>
                         @endif
                     </div>
-                    <div class="card-body p-3">
+                    <div class="card-body p-3" id="list-data">
                         @foreach ($datas as $data)
                             <!-- Card with an image on left -->
-                            <div class="card mb-3 info-card sales-card">
+                            <div class="card mb-3 info-card sales-card" style="display: block"
+                                id="data-{{ $data->id }}">
                                 <div class="row g-0">
                                     <div class="col-md-2">
                                         @if ($data->image)
                                             <img class="img-fluid rounded-start"
-                                                src="{{ asset('storage/image' . $data->image) }}" alt="">
+                                                src="{{ asset('storage/image/' . $data->image) }}" alt="">
                                         @else
                                             <img class="img-fluid rounded-start"
-                                                src="{{ asset('storage/kategori/' . $data->image) }}" alt="">
+                                                src="{{ asset('storage/image/' . $data->image) }}" alt="">
                                         @endif
                                     </div>
                                     <div class="col-md-7">
@@ -131,11 +141,12 @@
                                             <p style="color : black;" class="card-text">
                                                 {!! $data->laporan !!}</p>
                                             @if ($data->status == 'Process')
-                                                <span class="badge bg-gradient-info">Process</span>
+                                                <span id="status" class="badge bg-gradient-info">Process</span>
                                             @elseif ($data->status == 'Done')
-                                                <span class="badge bg-gradient-success">Done</span>
+                                                <span id="status" class="badge bg-gradient-success">Done</span>
                                             @else
-                                                <span class="badge bg-gradient-secondary">Pending</span>
+                                                <span id="status"
+                                                    class="badge bg-gradient-secondary">Pending</span>
                                             @endif
                                         </div>
                                     </div>
@@ -246,64 +257,34 @@
             </div>
         </div>
     @endforeach
-    <!-- Modal -->
-    <div class="modal fade" id="tambah-data" tabindex="-1" role="dialog" aria-labelledby="modal-form"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <div class="card card-plain">
-                        <div class="card-header pb-0 text-left">
-                            <h3 class="font-weight-bolder text-info text-gradient">Tambah Data Petugas</h3>
-                            <p class="mb-0">Silahkan masukan value untuk menambahkan data petugas</p>
-                        </div>
-                        <div class="card-body">
-                            <form role="form text-left" method="POST" action="{{ route('admin.post') }}">
-                                @csrf
 
-                                <label>NIK</label>
-                                <div class="input-group mb-3">
-                                    <input type="number" name="nik" class="form-control" placeholder="nik"
-                                        aria-label="nik" aria-describedby="nik-addon" value="{{ old('nik') }}">
-                                </div>
-                                <label>Name</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" name="name" class="form-control" placeholder="name"
-                                        aria-label="name" aria-describedby="name-addon" value="{{ old('name') }}">
-                                </div>
-                                <label>Username</label>
-                                <div class="input-group mb-3">
-                                    <input type="name" name="username" class="form-control"
-                                        placeholder="username" aria-label="username"
-                                        aria-describedby="username-addon" value="{{ old('username') }}">
-                                </div>
-                                <label>Telp</label>
-                                <div class="input-group mb-3">
-                                    <input type="number" name="telp" class="form-control" placeholder="telp"
-                                        aria-label="telp" aria-describedby="telp-addon" value="{{ old('telp') }}">
-                                </div>
-                                <label>Password</label>
-                                <div class="input-group mb-3">
-                                    <input type="password" name="password" class="form-control"
-                                        placeholder="Password" aria-label="Password"
-                                        aria-describedby="password-addon">
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit"
-                                        class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Simpan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="{{ asset('assets/js/plugins/datatable.js') }}"></script>
-    <script type="text/javascript">
-        const dataTableBasic = new simpleDatatables.DataTable("#datatable-basic", {
-            searchable: true,
-            fixedHeight: true
-        });
+    <script>
+        function filtering() {
+            let listData = document.querySelector("#list-data");
+            let dataIds = listData.querySelectorAll("[id^='data-']");
+            let statusId = listData.querySelector("#status");
+
+            let filter = document.querySelector("#filter").value;
+
+            for (let i = 0; i < dataIds.length; i++) {
+                let dataId = dataIds[i];
+                let dataIdProcess = dataId.getAttribute("id").replace("data-", "");
+                let status = statusId.innerHTML;
+
+                if (filter != "") {
+                    if (status == filter) {
+                        dataId.style.display = "block";
+                    } else {
+                        dataId.style.display = "none";
+                    }
+                } else {
+                    dataId.style.display = "block";
+                }
+
+                // console.log("filter : ", filter)
+                // console.log("Data ID Process: ", dataIdProcess);
+                // console.log("Status: ", status);
+            }
+        }
     </script>
 </x-admin-layout>
