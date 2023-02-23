@@ -200,27 +200,39 @@
                                     </p>
                                 </div>
                             </li>
-                            <li class="right clearfix">
-                                <div class="chat-body clearfix">
-                                    <div class="header">
-                                        <strong class="float-right primary-font">User 2</strong>
-                                        <br>
-                                        <small class="float-left text-muted"><span
-                                                class="glyphicon glyphicon-time"></span>13 mins ago</small>
+                            @if ($data->Tanggapan->count())
+                                <li class="right clearfix">
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{ $data->Tanggapan->User->name }}<span
+                                                    class="fw-normal">#{{ $data->Tanggapan->User->username }}</span></strong>
+                                            <br>
+                                            <br>
+                                            <small class="float-left text-muted"><span
+                                                    class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
+                                        </div>
+                                        <p>
+                                            {!! $data->Tanggapan->pesan !!}
+                                        </p>
                                     </div>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                    </p>
-                                </div>
-                            </li>
+                                </li>
+                            @endif
                         </ul>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Understood</button>
+                        <div class="row g-3">
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="" id="">
+                            </div>
+                            <div class="col-sm">
+                                <button type="button" class="btn btn-primary">Understood</button>
+                            </div>
+                            <div class="col-sm">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
