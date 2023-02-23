@@ -151,7 +151,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 my-auto">
-                                        <button type="button" class="btn bg-gradient-info">Tanggapan</button>
+                                        <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal"
+                                            data-bs-target="#tanggapan{{ $data->id }}">Tanggapan</button>
                                         <button type="button" class="btn bg-gradient-success">Action</button>
                                     </div>
                                 </div>
@@ -164,60 +165,62 @@
     </div>
     @foreach ($datas as $data)
         <!-- Modal -->
-        <div class="modal fade" id="modal-form{{ $data->id }}" tabindex="-1" role="dialog"
-            aria-labelledby="modal-form" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal fade" id="tanggapan{{ $data->id }}" data-bs-backdrop="static"
+            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <div class="card card-plain">
-                            <div class="card-header pb-0 text-left">
-                                <h3 class="font-weight-bolder text-info text-gradient">Edit Data Petugas</h3>
-                                <p class="mb-0">Silahkan masukan value untuk mengedit data petugas</p>
-                            </div>
-                            <div class="card-body">
-                                <form role="form text-left" method="POST"
-                                    action="{{ route('admin.edit', $data->id) }}">
-                                    @method('PATCH')
-                                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Beri Tanggapan</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
 
-                                    <label>NIK</label>
-                                    <div class="input-group mb-3">
-                                        <input type="number" name="nik" class="form-control" placeholder="nik"
-                                            aria-label="nik" aria-describedby="nik-addon"
-                                            value="{{ old('nik', $data->nik) }}">
+                        <ul class="chat">
+                            <li class="left clearfix">
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        @if ($data->user_id != 0)
+                                            <strong class="primary-font">{{ $data->User->name }}<span
+                                                    class="fw-normal">#{{ $data->User->username }}</span></strong>
+                                            <br>
+                                        @else
+                                            <strong class="primary-font">{{ $data->old_name }}<span
+                                                    class="fw-normal">#{{ $data->old_username }}<br>
+                                                    <span class="text-sm">(user telah dihapu)</span>
+                                                </span>
+                                            </strong>
+                                            <br>
+                                        @endif
+                                        <small class="float-right text-muted"><span
+                                                class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
                                     </div>
-                                    <label>Name</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" name="name" class="form-control" placeholder="name"
-                                            aria-label="name" aria-describedby="name-addon"
-                                            value="{{ old('name', $data->name) }}">
+                                    <p>
+                                        {!! $data->laporan !!}
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="right clearfix">
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="float-right primary-font">User 2</strong>
+                                        <br>
+                                        <small class="float-left text-muted"><span
+                                                class="glyphicon glyphicon-time"></span>13 mins ago</small>
                                     </div>
-                                    <label>Username</label>
-                                    <div class="input-group mb-3">
-                                        <input type="name" name="username" class="form-control"
-                                            placeholder="username" aria-label="username"
-                                            aria-describedby="username-addon"
-                                            value="{{ old('username', $data->username) }}">
-                                    </div>
-                                    <label>Telp</label>
-                                    <div class="input-group mb-3">
-                                        <input type="number" name="telp" class="form-control" placeholder="telp"
-                                            aria-label="telp" aria-describedby="telp-addon"
-                                            value="{{ old('telp', $data->telp) }}">
-                                    </div>
-                                    <label>Password</label>
-                                    <div class="input-group mb-3">
-                                        <input type="password" name="password" class="form-control"
-                                            placeholder="Password" aria-label="Password"
-                                            aria-describedby="password-addon">
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit"
-                                            class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Simpan</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Understood</button>
                     </div>
                 </div>
             </div>

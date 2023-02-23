@@ -14,4 +14,9 @@ class UserController extends Controller
 
         return view('user.home', compact('datas'));
     }
+
+    public function pengaduan()
+    {
+        return view('user.pengaduan');
+    }
 }

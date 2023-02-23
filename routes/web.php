@@ -36,7 +36,7 @@ Route::get('/404', function () {
 });
 
 Route::middleware('auth', 'role:user')->group(function () {
-    Route::get('/pengaduan', [PengaduanController::class, 'index']);
+    Route::get('/pengaduan', [UserController::class, 'pengaduan']);
     Route::post('/pengaduan', [PengaduanController::class, 'create'])->name('post.pengaduan');
     Route::get('/home', [UserController::class, 'index'])->name('user.home');
 });
