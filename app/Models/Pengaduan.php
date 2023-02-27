@@ -23,3 +23,4 @@ class Pengaduan extends Model
         return $this->hasMany(tanggapan::class);
     }
 }
+    

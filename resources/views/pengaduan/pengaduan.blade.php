@@ -1,6 +1,6 @@
 <x-admin-layout>
 
-    <link rel="stylesheet" href="{{ asset('assets/css/datatable.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('assets/css/datatable.css') }}"> --}}
 
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur"
@@ -153,7 +153,9 @@
                                     <div class="col-md-3 my-auto">
                                         <button type="button" class="btn bg-gradient-info" data-bs-toggle="modal"
                                             data-bs-target="#tanggapan{{ $data->id }}">Tanggapan</button>
-                                        <button type="button" class="btn bg-gradient-success">Action</button>
+                                        <button type="button" data-bs-toggle="modal"
+                                            data-bs-target="#action{{ $data->id }}"
+                                            class="btn bg-gradient-success">Action</button>
                                     </div>
                                 </div>
                             </div><!-- End Card with an image on left -->
@@ -165,8 +167,8 @@
     </div>
     @foreach ($datas as $data)
         <!-- Modal -->
-        <div class="modal fade" id="tanggapan{{ $data->id }}" data-bs-backdrop="static"
-            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="tanggapan{{ $data->id }}" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -200,46 +202,108 @@
                                     </p>
                                 </div>
                             </li>
-                            @if ($data->Tanggapan->count())
-                                <li class="right clearfix">
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">{{ $data->Tanggapan->User->name }}<span
-                                                    class="fw-normal">#{{ $data->Tanggapan->User->username }}</span></strong>
-                                            <br>
-                                            <br>
-                                            <small class="float-left text-muted"><span
-                                                    class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
+                            @if ($data->Tanggapan)
+                                @foreach ($data->Tanggapan as $tanggapan)
+                                    <li class="right clearfix">
+                                        <div class="chat-body clearfix">
+                                            <div class="header">
+                                                @if ($tanggapan->User->id == auth()->user()->id)
+                                                    <strong class="primary-font">You</strong>
+                                                    <br>
+                                                    <small class="float-left text-muted"><span
+                                                            class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
+                                                @else
+                                                    <strong class="primary-font">{{ $tanggapan->User->name }}<span
+                                                            class="fw-normal">#{{ $tanggapan->User->username }}</span></strong>
+                                                    <br>
+                                                    <small class="float-left text-muted"><span
+                                                            class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
+                                                @endif
+                                            </div>
+                                            <p>
+                                                {!! $tanggapan->pesan !!}
+                                            </p>
                                         </div>
-                                        <p>
-                                            {!! $data->Tanggapan->pesan !!}
-                                        </p>
-                                    </div>
-                                </li>
+                                    </li>
+                                @endforeach
                             @endif
                         </ul>
                     </div>
-
-                    <div class="modal-footer">
-                        <div class="row g-3">
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" name="" id="">
-                            </div>
-                            <div class="col-sm">
-                                <button type="button" class="btn btn-primary">Understood</button>
-                            </div>
-                            <div class="col-sm">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close</button>
-                            </div>
+                    <form action="{{ route('admin.pengaduan.post') }}" method="POST">
+                        <div class="modal-footer">
+                            @csrf
+                            <input type="hidden" name="pengaduan_id" value="{{ $data->id }}">
+                            <input class="form-control" placeholder="masukan pesan" type="text" name="pesan"
+                                id="pesan" required>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     @endforeach
     @foreach ($datas as $data)
-        <div class="modal fade" id="modal-notification{{ $data->id }}" tabindex="-1" role="dialog"
+        <div class="modal fade" id="action{{ $data->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="modal-notification" aria-hidden="true">
+            <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i class="ni ni-bell-55 ni-3x"></i>
+                            <h4 class="text-gradient text-danger mt-4">Pilih Action!</h4>
+                            <p>pilih action di bawah</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#status{{ $data->id }}">Ubah Status</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete{{ $data->id }}"
+                            class="btn btn-danger ml-auto">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form action="{{ route('admin.pengaduan.updateStatus', $data->id) }} " method="post">
+            @method('PATCH')
+            @csrf
+            <div class="modal fade" id="status{{ $data->id }}" tabindex="-1" role="dialog"
+                aria-labelledby="modal-notification" aria-hidden="true">
+                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <select type="button" name="ststus" id="filter"
+                                class="btn bg-gradient-primary w-100">
+                                <option value="">Pilih Status</option>
+                                @foreach ($status as $s)
+                                    <option value="{{ $s }}" {{ $data->status == $s ? 'selected' : '' }}>
+                                        {{ $s }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
+                            <button type="submit" class="btn btn-success ml-auto">Ubah</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="modal fade" id="delete{{ $data->id }}" tabindex="-1" role="dialog"
             aria-labelledby="modal-notification" aria-hidden="true">
             <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
                 <div class="modal-content">
@@ -253,10 +317,7 @@
                         <div class="py-3 text-center">
                             <i class="ni ni-bell-55 ni-3x"></i>
                             <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
-                            <p>apa anda serius menghapus data
-                                <br>
-                                {{ $data->name }}
-                            </p>
+                            <p>apa anda serius menghapus data tersebut </p>
                         </div>
                     </div>
                     <div class="modal-footer">

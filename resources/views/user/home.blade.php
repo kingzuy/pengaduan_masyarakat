@@ -149,55 +149,57 @@
                                                             </div>
                                                         </div>
 
-                                                        @if ($data->Tanggapan->count())
-                                                            @if ($data->Tanggapan->user_id != auth()->user()->id)
-                                                                {{-- pesan --}}
-                                                                <div class="flex flex-row">
-                                                                    <div
-                                                                        class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                        @if ($data->Tanggapan)
+                                                            @foreach ($data->Tanggapan as $tanggapan)
+                                                                @if ($tanggapan->user_id != auth()->user()->id)
+                                                                    {{-- pesan --}}
+                                                                    <div class="flex flex-row">
                                                                         <div
-                                                                            class="flex items-center justify-between mb-2">
-                                                                            <div class="flex items-center">
-                                                                                <p
-                                                                                    class="text-sm font-medium text-gray-900">
-                                                                                    {{ $data->Tanggapan->User->name }}<span
-                                                                                        class="text-sm text-gray-500">#{{ $data->Tanggapan->User->username }}</span>
+                                                                            class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                            <div
+                                                                                class="flex items-center justify-between mb-2">
+                                                                                <div class="flex items-center">
+                                                                                    <p
+                                                                                        class="text-sm font-medium text-gray-900">
+                                                                                        {{ $tanggapan->User->name }}<span
+                                                                                            class="text-sm text-gray-500">#{{ $tanggapan->User->username }}</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                                <p class="text-xs text-gray-600">
+                                                                                    {{ $tanggapan->created_at->diffForHumans() }}
                                                                                 </p>
                                                                             </div>
-                                                                            <p class="text-xs text-gray-600">
-                                                                                {{ $data->Tanggapan->created_at->diffForHumans() }}
+                                                                            <p class="text-sm text-gray-700">
+                                                                                {!! $tanggapan->pesan !!}
                                                                             </p>
                                                                         </div>
-                                                                        <p class="text-sm text-gray-700">
-                                                                            {!! $data->Tanggapan->pesan !!}
-                                                                        </p>
                                                                     </div>
-                                                                </div>
-                                                            @else
-                                                                {{-- jawab --}}
-                                                                <div class="flex flex-row">
-                                                                    <div class="basis-1/4"></div>
-                                                                    <div
-                                                                        class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                @else
+                                                                    {{-- jawab --}}
+                                                                    <div class="flex flex-row">
+                                                                        <div class="basis-1/4"></div>
                                                                         <div
-                                                                            class="flex items-center justify-between mb-2">
-                                                                            <div class="flex items-center">
-                                                                                <p
-                                                                                    class="text-sm font-medium text-gray-900">
-                                                                                    {{ $data->Tanggapan->User->name }}<span
-                                                                                        class="text-sm text-gray-500">#{{ $data->Tanggapan->User->username }}</span>
+                                                                            class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                            <div
+                                                                                class="flex items-center justify-between mb-2">
+                                                                                <div class="flex items-center">
+                                                                                    <p
+                                                                                        class="text-sm font-medium text-gray-900">
+                                                                                        {{ $tanggapan->User->name }}<span
+                                                                                            class="text-sm text-gray-500">#{{ $tanggapan->User->username }}</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                                <p class="text-xs text-gray-600">
+                                                                                    {{ $tanggapan->created_at->diffForHumans() }}
                                                                                 </p>
                                                                             </div>
-                                                                            <p class="text-xs text-gray-600">
-                                                                                {{ $data->Tanggapancreated_at->diffForHumans() }}
+                                                                            <p class="text-sm text-gray-700">
+                                                                                {!! $tanggapan->pesan !!}</p>
                                                                             </p>
                                                                         </div>
-                                                                        <p class="text-sm text-gray-700">
-                                                                            {!! $data->Tanggapan->pesan !!}</p>
-                                                                        </p>
                                                                     </div>
-                                                                </div>
-                                                            @endif
+                                                                @endif
+                                                            @endforeach
                                                         @endif
 
 
@@ -205,26 +207,31 @@
                                                     </div>
 
                                                     <!-- Modal footer -->
-                                                    <div
-                                                        class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                        <input type="text" class="basis-3/4 rounded-lg text-sm">
-                                                        <button data-modal-hide="large-modal{{ $data->id }}"
-                                                            type="button"
-                                                            class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
-                                                            accept</button>
-                                                        <button data-modal-hide="large-modal{{ $data->id }}"
-                                                            type="button"
-                                                            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
-                                                    </div>
+                                                    <form action="{{ route('pengaduan.post') }}" method="post">
+                                                        @csrf
+                                                        <div
+                                                            class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                                            <input type="hidden" name="pengaduan_id"
+                                                                value="{{ $data->id }}">
+                                                            <input type="text" name="pesan"
+                                                                class="basis-3/4 rounded-lg text-sm" required>
+                                                            <button type="submit"
+                                                                class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                                                Send</button>
+                                                            <button data-modal-hide="large-modal{{ $data->id }}"
+                                                                type="button"
+                                                                class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
+                                </div>
                             @endforeach
-                        </div>
-                    @else
-                        <p class="flex justify-center items-center">Data pengaduan tidak ada</p>
+                        @else
+                            <p class="flex justify-center items-center">Data pengaduan tidak ada</p>
                     @endif
                 </section>
 

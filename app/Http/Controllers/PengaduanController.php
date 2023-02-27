@@ -20,7 +20,9 @@ class PengaduanController extends Controller
     {
         $datas = Pengaduan::latest()->get();
 
-        return view('pengaduan.pengaduan', compact('datas'));
+        $status = ["Pending", "Proses", "Done"];
+
+        return view('pengaduan.pengaduan', compact('datas', 'status'));
     }
 
     /**
@@ -65,55 +67,16 @@ class PengaduanController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function upStatus(Request $request, $id)
     {
-        //
-    }
+        $pengaduan = Pengaduan::findOrFail($id);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $pengaduan->ststus = $request->ststus;
+        $pengaduan->save();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        if (!$pengaduan) return redirect()->back()->with('message_error', 'Data gagal di tambahkan');
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('user.home')->with('message', 'Data berhasil di tambahkan');
     }
 }

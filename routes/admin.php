@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PengaduanController;
+use App\Http\Controllers\TanggapanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,8 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::delete('/admin/petugas/{id}', [AdminController::class, 'deletePetugas'])->name('delete');
 
     Route::get('/admin/laporan', [PengaduanController::class, 'index'])->name('pengaduan');
+    Route::patch('/admin/laporan/{id}', [PengaduanController::class, 'upStatus'])->name('pengaduan.updateStatus');
+    Route::post('/admin/laporan', [TanggapanController::class, 'proses'])->name('pengaduan.post');
 
     Route::get('/admin/profile', [AdminController::class, 'edit'])->name('profile.edit');
     Route::patch('/admin/profile', [AdminController::class, 'update'])->name('profile.update');

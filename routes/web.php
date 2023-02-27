@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TanggapanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,8 @@ Route::middleware('auth', 'role:user')->group(function () {
     Route::get('/pengaduan', [UserController::class, 'pengaduan']);
     Route::post('/pengaduan', [PengaduanController::class, 'create'])->name('post.pengaduan');
     Route::get('/home', [UserController::class, 'index'])->name('user.home');
+
+    Route::post('/home', [TanggapanController::class, 'proses'])->name('pengaduan.post');
 });
 
 Route::middleware('auth')->name('profile.')->group(function () {
