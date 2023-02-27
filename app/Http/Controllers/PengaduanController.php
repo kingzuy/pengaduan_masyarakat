@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
+use App\Models\RekapPengaduan;
 use App\View\Components\auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Redis;
 
 class PengaduanController extends Controller
 {
@@ -60,6 +61,15 @@ class PengaduanController extends Controller
 
         if (!$pengaduan) return redirect()->back()->with('message_error', 'Data gagal di tambahkan');
 
+        $rekap = RekapPengaduan::create([
+            'pengadu' => auth()->user()->name,
+            'username_pengadu' => auth()->user()->username,
+            'laporan' => trim($request->laporan),
+            'pesan' => 'Pengaduan masuk',
+        ]);
+
+        if (!$rekap) return redirect()->back()->with('message_error', 'Data gagal di tambahkan');
+
         return redirect()->route('user.home')->with('message', 'Data berhasil di tambahkan');
     }
 
@@ -72,11 +82,76 @@ class PengaduanController extends Controller
     {
         $pengaduan = Pengaduan::findOrFail($id);
 
-        $pengaduan->ststus = $request->ststus;
+        $pengaduan->status = $request->status;
         $pengaduan->save();
 
-        if (!$pengaduan) return redirect()->back()->with('message_error', 'Data gagal di tambahkan');
+        if (!$pengaduan) return redirect()->back()->with('message_error', 'Status gagal di ubah');
 
-        return redirect()->route('user.home')->with('message', 'Data berhasil di tambahkan');
+        if ($pengaduan->old_name) {
+
+            $rekap = RekapPengaduan::create([
+                'pengadu' => $pengaduan->User->old_name,
+                'username_pengadu' => $pengaduan->User->old_username,
+                'laporan' => $pengaduan->laporan,
+                'petugas' => auth()->user()->name,
+                'username_petugas' => auth()->user()->username,
+                'status' => $request->status,
+                'pesan' => 'Status berubah menjadi ' . $request->status,
+            ]);
+        } else {
+
+            $rekap = RekapPengaduan::create([
+                'pengadu' => $pengaduan->User->name,
+                'username_pengadu' => $pengaduan->User->username,
+                'laporan' => $pengaduan->laporan,
+                'petugas' => auth()->user()->name,
+                'username_petugas' => auth()->user()->username,
+                'status' => $request->status,
+                'pesan' => 'Status berubah menjadi ' . $request->status,
+            ]);
+        }
+
+
+        if (!$rekap) return redirect()->back()->with('message_error', 'Status gagal di ubah');
+
+        return redirect()->route('admin.pengaduan')->with('message', 'Status berhasil di ubah');
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $pengaduan = Pengaduan::findOrFail($id);
+
+
+        if ($pengaduan->old_name) {
+
+            $rekap = RekapPengaduan::create([
+                'pengadu' => $pengaduan->User->name,
+                'username_pengadu' => $pengaduan->User->username,
+                'laporan' => $pengaduan->laporan,
+                'petugas' => auth()->user()->name,
+                'username_petugas' => auth()->user()->username,
+                'status' => 'destroy',
+                'pesan' => 'Data di hapus karena ' . $request->pesan,
+            ]);
+        } else {
+
+            $rekap = RekapPengaduan::create([
+                'pengadu' => $pengaduan->User->name,
+                'username_pengadu' => $pengaduan->User->username,
+                'laporan' => $pengaduan->laporan,
+                'petugas' => auth()->user()->name,
+                'username_petugas' => auth()->user()->username,
+                'status' => 'destroy',
+                'pesan' => 'Data di hapus karena ' . $request->pesan,
+            ]);
+        }
+
+        $pengaduan->delete();
+
+        if (!$pengaduan) return redirect()->back()->with('message_error', 'Data gagal di hapus');
+
+        if (!$rekap) return redirect()->back()->with('message_error', 'Data gagal di hapus');
+
+        return redirect()->route('admin.pengaduan')->with('message', 'Data berhasil di hapus');
     }
 }

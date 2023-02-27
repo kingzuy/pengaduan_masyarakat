@@ -140,8 +140,8 @@
                                             @endif
                                             <p style="color : black;" class="card-text">
                                                 {!! $data->laporan !!}</p>
-                                            @if ($data->status == 'Process')
-                                                <span id="status" class="badge bg-gradient-info">Process</span>
+                                            @if ($data->status == 'Proses')
+                                                <span id="status" class="badge bg-gradient-info">Proses</span>
                                             @elseif ($data->status == 'Done')
                                                 <span id="status" class="badge bg-gradient-success">Done</span>
                                             @else
@@ -285,7 +285,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <select type="button" name="ststus" id="filter"
+                            <select type="button" name="status" id="filter"
                                 class="btn bg-gradient-primary w-100">
                                 <option value="">Pilih Status</option>
                                 @foreach ($status as $s)
@@ -303,35 +303,38 @@
             </div>
         </form>
 
-        <div class="modal fade" id="delete{{ $data->id }}" tabindex="-1" role="dialog"
-            aria-labelledby="modal-notification" aria-hidden="true">
-            <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="py-3 text-center">
-                            <i class="ni ni-bell-55 ni-3x"></i>
-                            <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
-                            <p>apa anda serius menghapus data tersebut </p>
+        <form action="{{ route('admin.pengaduan.destroy', $data->id) }}" method="post">
+            <div class="modal fade" id="delete{{ $data->id }}" tabindex="-1" role="dialog"
+                aria-labelledby="modal-notification" aria-hidden="true">
+                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <form action="{{ route('admin.delete', $data->id) }}" method="post">
+                        <div class="modal-body">
+                            <div class="py-3 text-center">
+                                <i class="ni ni-bell-55 ni-3x"></i>
+                                <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
+                                <p>apa anda serius menghapus data tersebut </p>
+                            </div>
+                            <small class="fs-sm">alasan mengapa data di hapus*</small>
+                            <input type="text" class="form-control" name="pesan" required autofocus
+                                name="alasan">
+                        </div>
+                        <div class="modal-footer">
                             @method('DELETE')
                             @csrf
 
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
                             <button type="submit" class="btn btn-danger ml-auto">Delete</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     @endforeach
 
     <script>

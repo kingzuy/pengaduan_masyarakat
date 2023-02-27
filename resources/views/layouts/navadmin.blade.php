@@ -19,16 +19,18 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->is('admin/petugas') ? 'active' : '' }}"
-                    href="{{ route('admin.petugas') }}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-badge text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Petugas</span>
-                </a>
-            </li>
+            @if (auth()->user()->role == 'admin')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('admin/petugas') ? 'active' : '' }}"
+                        href="{{ route('admin.petugas') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-badge text-warning text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Petugas</span>
+                    </a>
+                </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('admin/masyarakat') ? 'active' : '' }}"
                     href="{{ route('admin.masyarakat') }}">
@@ -49,15 +51,18 @@
                     <span class="nav-link-text ms-1">Laporan Masyarakat</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link " href="./pages/rtl.html">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-world-2 text-danger text-sm opacity-10"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">RTL</span>
-                </a>
-            </li>
+            @if (auth()->user()->role == 'admin')
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('admin/rekap') ? 'active' : '' }}"
+                        href="{{ route('admin.laporan') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="far fa-file-pdf text-secondary text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Rekap Laporan</span>
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </aside>

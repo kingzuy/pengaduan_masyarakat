@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TanggapanController;
@@ -26,7 +27,7 @@ Route::get('/', function () {
 
 Route::get('/404', function () {
     if (auth()->user()->role == 'petugas') {
-        return redirect()->route('author.home');
+        return redirect()->route('admin.dashboard');
     } else if (auth()->user()->role == 'admin') {
         return redirect()->route('admin.dashboard');
     } else if (auth()->user()->role == 'user') {
