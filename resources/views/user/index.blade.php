@@ -31,6 +31,7 @@
                                         {{ $data->User->name }}
                                         <span>#</span>
                                         {{ $data->User->username }}
+
                                     </div>
                                     <a href="javascript:;" class="text-success icon-move-right pull-right">Read More
                                         <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>

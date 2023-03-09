@@ -10,7 +10,7 @@ class LaporanController extends Controller
 {
     public function index()
     {
-        $datas = RekapPengaduan::get();
+        $datas = RekapPengaduan::latest()->get();
 
         return view('admin.rekap.index', compact('datas'));
     }

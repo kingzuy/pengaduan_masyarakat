@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         if (auth()->attempt(array('username' => $input['username'], 'password' => $input['password']))) {
 
             if (auth()->user()->role == 'petugas') {
-                return redirect()->route('admin.dashboard');
+                return redirect('/petugas');
             } else if (auth()->user()->role == 'admin') {
                 return redirect()->route('admin.dashboard');
             } else {

@@ -28,9 +28,15 @@
                         <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4"
                             aria-labelledby="dropdownMenuButton" style="top: 0 !important;"">
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="{{ url('/admin/profile') }}">
-                                    Profile
-                                </a>
+                                @if (auth()->user()->role == 'admin')
+                                    <a class="dropdown-item border-radius-md" href="{{ url('/admin/profile') }}">
+                                        Profile
+                                    </a>
+                                @else
+                                    <a class="dropdown-item border-radius-md" href="{{ url('/petugas/profile') }}">
+                                        Profile
+                                    </a>
+                                @endif
                             </li>
                             <li class="mb-2">
                                 <form method="POST" action="{{ route('logout') }}">
@@ -207,14 +213,25 @@
                                     <li class="right clearfix">
                                         <div class="chat-body clearfix">
                                             <div class="header">
-                                                @if ($tanggapan->User->id == auth()->user()->id)
-                                                    <strong class="primary-font">You</strong>
-                                                    <br>
+                                                @if ($tanggapan->user_id != 0)
+                                                    @if ($tanggapan->User->id == auth()->user()->id)
+                                                        <strong class="primary-font">You</strong>
+                                                        <br>
+                                                        <small class="float-left text-muted"><span
+                                                                class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
+                                                    @else
+                                                        <strong class="primary-font">{{ $tanggapan->User->name }}<span
+                                                                class="fw-normal">#{{ $tanggapan->User->username }}<br>({{ $tanggapan->User->role }})</span></strong>
+                                                        <br>
+                                                    @endif
                                                     <small class="float-left text-muted"><span
                                                             class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
                                                 @else
-                                                    <strong class="primary-font">{{ $tanggapan->User->name }}<span
-                                                            class="fw-normal">#{{ $tanggapan->User->username }}</span></strong>
+                                                    <strong class="primary-font">{{ $tanggapan->old_name }}<span
+                                                            class="fw-normal">#{{ $tanggapan->old_username }}
+                                                            <br>
+                                                            <span class="text-sm">(user telah
+                                                                dihapu)</span></span></strong>
                                                     <br>
                                                     <small class="float-left text-muted"><span
                                                             class="glyphicon glyphicon-time"></span>{{ $data->created_at->diffForHumans() }}</small>
@@ -229,16 +246,31 @@
                             @endif
                         </ul>
                     </div>
-                    <form action="{{ route('admin.pengaduan.post') }}" method="POST">
-                        <div class="modal-footer">
-                            @csrf
-                            <input type="hidden" name="pengaduan_id" value="{{ $data->id }}">
-                            <input class="form-control" placeholder="masukan pesan" type="text" name="pesan"
-                                id="pesan" required>
-                            <button type="submit" class="btn btn-primary">Send</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </form>
+                    @if (auth()->user()->role == 'admin')
+                        <form action="{{ route('admin.pengaduan.post') }}" method="POST">
+                            <div class="modal-footer">
+                                @csrf
+                                <input type="hidden" name="pengaduan_id" value="{{ $data->id }}">
+                                <input class="form-control" placeholder="masukan pesan" type="text"
+                                    name="pesan" id="pesan" required>
+                                <button type="submit" class="btn btn-primary">Send</button>
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    @else
+                        <form action="{{ url('/petugas/laporan') }}" method="POST">
+                            <div class="modal-footer">
+                                @csrf
+                                <input type="hidden" name="pengaduan_id" value="{{ $data->id }}">
+                                <input class="form-control" placeholder="masukan pesan" type="text"
+                                    name="pesan" id="pesan" required>
+                                <button type="submit" class="btn btn-primary">Send</button>
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -270,85 +302,152 @@
                 </div>
             </div>
         </div>
-
-        <form action="{{ route('admin.pengaduan.updateStatus', $data->id) }} " method="post">
-            @method('PATCH')
-            @csrf
-            <div class="modal fade" id="status{{ $data->id }}" tabindex="-1" role="dialog"
-                aria-labelledby="modal-notification" aria-hidden="true">
-                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <select type="button" name="status" id="filter"
-                                class="btn bg-gradient-primary w-100">
-                                <option value="">Pilih Status</option>
-                                @foreach ($status as $s)
-                                    <option value="{{ $s }}" {{ $data->status == $s ? 'selected' : '' }}>
-                                        {{ $s }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
-                            <button type="submit" class="btn btn-success ml-auto">Ubah</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <form action="{{ route('admin.pengaduan.destroy', $data->id) }}" method="post">
-            <div class="modal fade" id="delete{{ $data->id }}" tabindex="-1" role="dialog"
-                aria-labelledby="modal-notification" aria-hidden="true">
-                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="py-3 text-center">
-                                <i class="ni ni-bell-55 ni-3x"></i>
-                                <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
-                                <p>apa anda serius menghapus data tersebut </p>
+        @if (auth()->user()->role == 'admin')
+            <form action="{{ route('admin.pengaduan.updateStatus', $data->id) }} " method="post">
+                @method('PATCH')
+                @csrf
+                <div class="modal fade" id="status{{ $data->id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="modal-notification" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
                             </div>
-                            <small class="fs-sm">alasan mengapa data di hapus*</small>
-                            <input type="text" class="form-control" name="pesan" required autofocus
-                                name="alasan">
-                        </div>
-                        <div class="modal-footer">
-                            @method('DELETE')
-                            @csrf
-
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
-                            <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+                            <div class="modal-body">
+                                <select type="button" name="status" id="filter"
+                                    class="btn bg-gradient-primary w-100">
+                                    <option value="">Pilih Status</option>
+                                    @foreach ($status as $s)
+                                        <option value="{{ $s }}"
+                                            {{ $data->status == $s ? 'selected' : '' }}>
+                                            {{ $s }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
+                                <button type="submit" class="btn btn-success ml-auto">Ubah</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        @else
+            <form action="{{ url('/petugas/laporan', $data->id) }} " method="post">
+                @method('PATCH')
+                @csrf
+                <div class="modal fade" id="status{{ $data->id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="modal-notification" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <select type="button" name="status" id="filter"
+                                    class="btn bg-gradient-primary w-100">
+                                    <option value="">Pilih Status</option>
+                                    @foreach ($status as $s)
+                                        <option value="{{ $s }}"
+                                            {{ $data->status == $s ? 'selected' : '' }}>
+                                            {{ $s }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
+                                <button type="submit" class="btn btn-success ml-auto">Ubah</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        @endif
+
+        @if (auth()->user()->role == 'admin')
+            <form action="{{ route('admin.pengaduan.destroy', $data->id) }}" method="post">
+                <div class="modal fade" id="delete{{ $data->id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="modal-notification" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="py-3 text-center">
+                                    <i class="ni ni-bell-55 ni-3x"></i>
+                                    <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
+                                    <p>apa anda serius menghapus data tersebut </p>
+                                </div>
+                                <small class="fs-sm">alasan mengapa data di hapus*</small>
+                                <input type="text" class="form-control" name="pesan" required autofocus
+                                    name="alasan">
+                            </div>
+                            <div class="modal-footer">
+                                @method('DELETE')
+                                @csrf
+
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
+                                <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        @else
+            <form action="{{ url('/petugas/laporan', $data->id) }}" method="post">
+                <div class="modal fade" id="delete{{ $data->id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="modal-notification" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="py-3 text-center">
+                                    <i class="ni ni-bell-55 ni-3x"></i>
+                                    <h4 class="text-gradient text-danger mt-4">Perhatian!</h4>
+                                    <p>apa anda serius menghapus data tersebut </p>
+                                </div>
+                                <small class="fs-sm">alasan mengapa data di hapus*</small>
+                                <input type="text" class="form-control" name="pesan" required autofocus
+                                    name="alasan">
+                            </div>
+                            <div class="modal-footer">
+                                @method('DELETE')
+                                @csrf
+
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Back</button>
+                                <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        @endif
     @endforeach
 
     <script>
         function filtering() {
             let listData = document.querySelector("#list-data");
             let dataIds = listData.querySelectorAll("[id^='data-']");
-            let statusId = listData.querySelector("#status");
-
             let filter = document.querySelector("#filter").value;
 
             for (let i = 0; i < dataIds.length; i++) {
                 let dataId = dataIds[i];
-                let dataIdProcess = dataId.getAttribute("id").replace("data-", "");
-                let status = statusId.innerHTML;
+                let status = dataId.querySelector(".badge").innerHTML;
 
                 if (filter != "") {
                     if (status == filter) {
@@ -360,8 +459,8 @@
                     dataId.style.display = "block";
                 }
 
-                // console.log("filter : ", filter)
-                // console.log("Data ID Process: ", dataIdProcess);
+                // console.log("filter : ", filter);
+                // console.log("Data ID Process: ", dataId.id);
                 // console.log("Status: ", status);
             }
         }

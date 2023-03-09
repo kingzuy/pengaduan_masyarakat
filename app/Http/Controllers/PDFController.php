@@ -15,7 +15,7 @@ class PDFController extends Controller
 
     public function previewPdf()
     {
-        $rekap = RekapPengaduan::get();
+        $rekap = RekapPengaduan::latest()->get();
 
         $data = [
             'title' => 'REKAP DATA PENGADUAN <br> MASYARAKAT',

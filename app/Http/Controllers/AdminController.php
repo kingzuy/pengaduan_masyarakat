@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\tanggapan;
 
 class AdminController extends Controller
 {
@@ -42,7 +43,7 @@ class AdminController extends Controller
 
         $pending = Pengaduan::where('status', 'Pending')->get()->count();
         $proses = Pengaduan::where('status', 'Proses')->get()->count();
-        $finish = Pengaduan::where('status', 'Finish')->get()->count();
+        $finish = Pengaduan::where('status', 'Done')->get()->count();
         $masyarakat = User::where('role', '0')->get()->count();
 
         foreach ($datas as $data) {
@@ -57,6 +58,12 @@ class AdminController extends Controller
         $datas = User::where('role', '1')->get();
 
         return view('admin.petugas', compact('datas'));
+    }
+    public function admin()
+    {
+        $datas = User::where('role', '2')->get();
+
+        return view('admin.admin', compact('datas'));
     }
 
     public function tambahPetugas(Request $request)
@@ -90,7 +97,7 @@ class AdminController extends Controller
 
         if (!$user) return redirect()->back()->with('error_message', 'Data gagal di tambahkan');
 
-        return redirect()->back()->with('message', 'Data petugas berhasil di tambahkan');
+        return redirect()->back()->with('message', 'Data berhasil di tambahkan');
     }
 
     public function editPetugas(Request $request, $id)
@@ -130,6 +137,10 @@ class AdminController extends Controller
         $petugas->username = $request->username;
         $petugas->nik = $request->nik;
         $petugas->telp = $request->telp;
+        if ($request->role) {
+            $petugas->role = $request->role;
+        }
+
         $petugas->save();
 
         if (!$petugas) return redirect()->back()->with('error_message', 'Data ' . $petugas->name . ' gagal di ubah');
@@ -143,6 +154,10 @@ class AdminController extends Controller
 
         if ($user->Pengaduan->count()) {
             $pengaduan = Pengaduan::where('user_id', $user->id)->update(['old_name' => $user->name, 'old_username' => $user->username, 'user_id' => 0]);
+        }
+
+        if ($user->Tanggapan->count()) {
+            $tanggapan = tanggapan::where('user_id', $user->id)->update(['old_name' => $user->name, 'old_username' => $user->username, 'user_id' => 0]);
         }
 
         $user->delete();
@@ -166,40 +181,41 @@ class AdminController extends Controller
     {
         $this->validate($request, [
             'name' => ['required'],
-            'nik' => ['required', 'numeric'],
-            'telp' => ['required', 'numeric'],
+            'nik' => ['numeric'],
+            'telp' => ['numeric'],
         ]);
 
+
         $user = User::findOrFail(auth()->user()->id);
+
+        if ($request->username != $user->username) {
+            $this->validate($request, [
+                'username' => ['unique:users,username']
+            ]);
+        }
+
+        if ($request->password) {
+            $this->validate($request, [
+                'password' => ['min:6']
+            ]);
+        }
 
         $user->name = $request->name;
         $user->nik = $request->nik;
         $user->telp = $request->telp;
+
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
         $user->save();
 
         if (!$user) return die();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->back()->with('message', 'profile-updated');
     }
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current-password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
-    }
 }

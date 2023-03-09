@@ -114,7 +114,7 @@ class PengaduanController extends Controller
 
         if (!$rekap) return redirect()->back()->with('message_error', 'Status gagal di ubah');
 
-        return redirect()->route('admin.pengaduan')->with('message', 'Status berhasil di ubah');
+        return redirect()->back()->with('message', 'Status berhasil di ubah');
     }
 
     public function destroy(Request $request, $id)

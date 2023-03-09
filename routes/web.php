@@ -53,6 +53,11 @@ Route::middleware('auth')->name('profile.')->group(function () {
 
 Route::get('/tes', [HomeController::class, 'index']);
 
+
 require __DIR__ . '/auth.php';
+
+
+require __DIR__ . '/petugas.php';
+
 
 require __DIR__ . '/admin.php';

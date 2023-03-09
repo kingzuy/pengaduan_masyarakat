@@ -11,9 +11,9 @@
                     <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white"
                             href="{{ route('admin.dashboard') }}">Admin</a>
                     </li>
-                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Petugas</li>
+                    <li class="breadcrumb-item text-sm text-white active" aria-current="page">Admin</li>
                 </ol>
-                <h6 class="font-weight-bolder text-white mb-0">Petugas</h6>
+                <h6 class="font-weight-bolder text-white mb-0">Admin</h6>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -67,10 +67,10 @@
                         <div class="">
                             <div class="btn-toolbar justify-content-between" role="toolbar"
                                 aria-label="Toolbar with button groups">
-                                <h6 class="text-capitalize">Data Petugas</h6>
+                                <h6 class="text-capitalize">Data Admin</h6>
                                 <div class="input-group">
                                     <button type="button" class="btn bg-gradient-primary" data-bs-toggle="modal"
-                                        data-bs-target="#tambah-data">Tambah Petugas</button>
+                                        data-bs-target="#tambah-data">Tambah Admin</button>
                                 </div>
                             </div>
                         </div>
@@ -158,8 +158,8 @@
                     <div class="modal-body p-0">
                         <div class="card card-plain">
                             <div class="card-header pb-0 text-left">
-                                <h3 class="font-weight-bolder text-info text-gradient">Edit Data Petugas</h3>
-                                <p class="mb-0">Silahkan masukan value untuk mengedit data petugas</p>
+                                <h3 class="font-weight-bolder text-info text-gradient">Edit Data Admin</h3>
+                                <p class="mb-0">Silahkan masukan value untuk mengedit data Admin</p>
                             </div>
                             <div class="card-body">
                                 <form role="form text-left" method="POST"
@@ -190,8 +190,8 @@
                                     <div class="input-group mb-3">
                                         <select name="role" id="role" class="form-select">
                                             <option value="0">User</option>
-                                            <option value="1" selected>Petugas</option>
-                                            <option value="2">Admin</option>
+                                            <option value="1">Petugas</option>
+                                            <option value="2" selected>Admin</option>
                                         </select>
                                     </div>
                                     <label>Telp</label>
@@ -260,8 +260,8 @@
                 <div class="modal-body p-0">
                     <div class="card card-plain">
                         <div class="card-header pb-0 text-left">
-                            <h3 class="font-weight-bolder text-info text-gradient">Tambah Data Petugas</h3>
-                            <p class="mb-0">Silahkan masukan value untuk menambahkan data petugas</p>
+                            <h3 class="font-weight-bolder text-info text-gradient">Tambah Data Admin</h3>
+                            <p class="mb-0">Silahkan masukan value untuk menambahkan data Admin</p>
                         </div>
                         <div class="card-body">
                             <form role="form text-left" method="POST" action="{{ route('admin.post') }}">
@@ -295,7 +295,7 @@
                                         aria-describedby="password-addon">
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" name="role" value="1"
+                                    <button type="submit" name="role" value="2"
                                         class="btn btn-round bg-gradient-info btn-lg w-100 mt-4 mb-0">Simpan</button>
                                 </div>
                             </form>

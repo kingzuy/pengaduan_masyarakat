@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pengaduan_id');
             $table->foreignId('user_id');
+            $table->string('old_name')->nullable();
+            $table->string('old_username')->nullable();
             $table->string('pesan');
             $table->timestamps();
         });

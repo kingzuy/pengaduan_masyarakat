@@ -33,9 +33,17 @@ class ProfileController extends Controller
             'telp' => ['required', 'numeric'],
         ]);
 
+
         $user = User::findOrFail(auth()->user()->id);
 
+        if ($request->username != $user->username) {
+            $this->validate($request, [
+                'username' => ['unique:users,username']
+            ]);
+        }
+
         $user->name = $request->name;
+        $user->username = $request->username;
         $user->nik = $request->nik;
         $user->telp = $request->telp;
         $user->save();

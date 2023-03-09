@@ -164,53 +164,86 @@
 
                                                         @if ($data->Tanggapan)
                                                             @foreach ($data->Tanggapan as $tanggapan)
-                                                                @if ($tanggapan->user_id != auth()->user()->id)
-                                                                    {{-- pesan --}}
-                                                                    <div class="flex flex-row">
-                                                                        <div
-                                                                            class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                @if ($tanggapan->user_id != 0)
+                                                                    @if ($tanggapan->user_id != auth()->user()->id)
+                                                                        {{-- pesan --}}
+                                                                        <div class="flex flex-row">
                                                                             <div
-                                                                                class="flex items-center justify-between mb-2">
-                                                                                <div class="flex items-center">
-                                                                                    <p
-                                                                                        class="text-sm font-medium text-gray-900">
-                                                                                        {{ $tanggapan->User->name }}<span
-                                                                                            class="text-sm text-gray-500">#{{ $tanggapan->User->username }}</span>
+                                                                                class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                                <div
+                                                                                    class="flex items-center justify-between mb-2">
+                                                                                    <div class="flex items-center">
+
+                                                                                        <p
+                                                                                            class="text-sm font-medium text-gray-900">
+                                                                                            {{ $tanggapan->User->name }}<span
+                                                                                                class="text-sm text-gray-500">#{{ $tanggapan->User->username }}</span><br>
+                                                                                            ({{ $tanggapan->User->role }})
+                                                                                        </p>
+
+                                                                                    </div>
+                                                                                    <p class="text-xs text-gray-600">
+                                                                                        {{ $tanggapan->created_at->diffForHumans() }}
                                                                                     </p>
                                                                                 </div>
-                                                                                <p class="text-xs text-gray-600">
-                                                                                    {{ $tanggapan->created_at->diffForHumans() }}
+                                                                                <p class="text-sm text-gray-700">
+                                                                                    {!! $tanggapan->pesan !!}
                                                                                 </p>
                                                                             </div>
-                                                                            <p class="text-sm text-gray-700">
-                                                                                {!! $tanggapan->pesan !!}
-                                                                            </p>
                                                                         </div>
-                                                                    </div>
+                                                                    @else
+                                                                        {{-- jawab --}}
+                                                                        <div class="flex flex-row">
+                                                                            <div class="basis-1/4"></div>
+                                                                            <div
+                                                                                class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                                <div
+                                                                                    class="flex items-center justify-between mb-2">
+                                                                                    <div class="flex items-center">
+                                                                                        <p
+                                                                                            class="text-sm font-medium text-gray-900">
+                                                                                            {{ $tanggapan->User->name }}<span
+                                                                                                class="text-sm text-gray-500">#{{ $tanggapan->User->username }}</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                    <p class="text-xs text-gray-600">
+                                                                                        {{ $tanggapan->created_at->diffForHumans() }}
+                                                                                    </p>
+                                                                                </div>
+                                                                                <p class="text-sm text-gray-700">
+                                                                                    {!! $tanggapan->pesan !!}</p>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
                                                                 @else
-                                                                    {{-- jawab --}}
-                                                                    <div class="flex flex-row">
-                                                                        <div class="basis-1/4"></div>
-                                                                        <div
-                                                                            class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                    @if ($tanggapan->user_id != auth()->user()->id)
+                                                                        {{-- pesan --}}
+                                                                        <div class="flex flex-row">
                                                                             <div
-                                                                                class="flex items-center justify-between mb-2">
-                                                                                <div class="flex items-center">
-                                                                                    <p
-                                                                                        class="text-sm font-medium text-gray-900">
-                                                                                        {{ $tanggapan->User->name }}<span
-                                                                                            class="text-sm text-gray-500">#{{ $tanggapan->User->username }}</span>
+                                                                                class="basis-3/4 rounded-lg bg-gray-100 py-2 px-4 mb-4">
+                                                                                <div
+                                                                                    class="flex items-center justify-between mb-2">
+                                                                                    <div class="flex items-center">
+
+                                                                                        <p
+                                                                                            class="text-sm font-medium text-gray-900">
+                                                                                            {{ $tanggapan->old_name }}<span
+                                                                                                class="text-sm text-gray-500">#{{ $tanggapan->old_username }}</span><br>
+                                                                                            (user telah di hapus)
+                                                                                        </p>
+
+                                                                                    </div>
+                                                                                    <p class="text-xs text-gray-600">
+                                                                                        {{ $tanggapan->created_at->diffForHumans() }}
                                                                                     </p>
                                                                                 </div>
-                                                                                <p class="text-xs text-gray-600">
-                                                                                    {{ $tanggapan->created_at->diffForHumans() }}
+                                                                                <p class="text-sm text-gray-700">
+                                                                                    {!! $tanggapan->pesan !!}
                                                                                 </p>
                                                                             </div>
-                                                                            <p class="text-sm text-gray-700">
-                                                                                {!! $tanggapan->pesan !!}</p>
-                                                                            </p>
                                                                         </div>
-                                                                    </div>
+                                                                    @endif
                                                                 @endif
                                                             @endforeach
                                                         @endif

@@ -20,7 +20,8 @@ class TanggapanController extends Controller
 
         if (!$tanggapan) return redirect()->back()->with('message_error', 'Pesan gagal terkirim');
 
-        if (auth()->user()->role == "admin") return redirect()->route('admin.pengaduan')->with('message', 'Pesan berhasil terkirim');
+        if (auth()->user()->role == "admin") return redirect()->back()->with('message', 'Pesan berhasil terkirim');
+        if (auth()->user()->role == "petugas") return redirect()->back()->with('message', 'Pesan berhasil terkirim');
         if (auth()->user()->role == "user") return redirect()->route('user.home')->with('message', 'Pesan berhasil terkirim');
     }
 }

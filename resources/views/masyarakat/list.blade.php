@@ -28,9 +28,15 @@
                         <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4"
                             aria-labelledby="dropdownMenuButton" style="top: 0 !important;"">
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="{{ url('/admin/profile') }}">
-                                    Profile
-                                </a>
+                                @if (auth()->user()->role == 'admin')
+                                    <a class="dropdown-item border-radius-md" href="{{ url('/admin/profile') }}">
+                                        Profile
+                                    </a>
+                                @else
+                                    <a class="dropdown-item border-radius-md" href="{{ url('/petugas/profile') }}">
+                                        Profile
+                                    </a>
+                                @endif
                             </li>
                             <li class="mb-2">
                                 <form method="POST" action="{{ route('logout') }}">
@@ -163,16 +169,15 @@
                     <div class="modal-body p-0">
                         <div class="card card-plain">
                             <div class="card-header pb-0 text-left">
-                                <h3 class="font-weight-bolder text-info text-gradient">Edit Data Petugas</h3>
-                                <p class="mb-0">Silahkan masukan value untuk mengedit data petugas</p>
+                                <h3 class="font-weight-bolder text-info text-gradient">Edit Data Masyarakat</h3>
+                                <p class="mb-0">Silahkan masukan value untuk mengedit data Masyarakat</p>
                             </div>
                             <div class="card-body">
                                 <form role="form text-left" method="POST"
-                                    action="{{ route('admin.edit', $data->id) }}">
-                                    @method('PATCH')
-                                    @csrf
-
-                                    <label>NIK</label>
+                                    @if (auth()->user()->role == 'admin') action="{{ url('/admin/petugas', $data->id) }}"
+                                @else
+                                action="{{ url('/petugas/petugas', $data->id) }}" @endif>
+                                    @method('PATCH') @csrf <label>NIK</label>
                                     <div class="input-group mb-3">
                                         <input type="number" name="nik" class="form-control" placeholder="nik"
                                             aria-label="nik" aria-describedby="nik-addon"
@@ -237,7 +242,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <form action="{{ route('admin.delete', $data->id) }}" method="post">
+                        <form method="post"
+                            @if (auth()->user()->role == 'admin') action="{{ url('/admin/petugas', $data->id) }}"
+                                @else
+                                action="{{ url('/petugas/petugas', $data->id) }}" @endif>
                             @method('DELETE')
                             @csrf
 
@@ -257,11 +265,14 @@
                 <div class="modal-body p-0">
                     <div class="card card-plain">
                         <div class="card-header pb-0 text-left">
-                            <h3 class="font-weight-bolder text-info text-gradient">Tambah Data Petugas</h3>
-                            <p class="mb-0">Silahkan masukan value untuk menambahkan data petugas</p>
+                            <h3 class="font-weight-bolder text-info text-gradient">Tambah Data Masyarakat</h3>
+                            <p class="mb-0">Silahkan masukan value untuk menambahkan data Masyarakat</p>
                         </div>
                         <div class="card-body">
-                            <form role="form text-left" method="POST" action="{{ route('admin.post') }}">
+                            <form role="form text-left" method="POST"
+                                @if (auth()->user()->role == 'admin') action="{{ url('/admin/petugas') }}"
+                                @else
+                                action="{{ url('/petugas/petugas') }}" @endif>
                                 @csrf
 
                                 <label>NIK</label>

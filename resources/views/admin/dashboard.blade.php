@@ -25,9 +25,15 @@
                         <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4"
                             aria-labelledby="dropdownMenuButton" style="top: 0 !important;"">
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="{{ url('/admin/profile') }}">
-                                    Profile
-                                </a>
+                                @if (auth()->user()->role == 'admin')
+                                    <a class="dropdown-item border-radius-md" href="{{ url('/admin/profile') }}">
+                                        Profile
+                                    </a>
+                                @else
+                                    <a class="dropdown-item border-radius-md" href="{{ url('/petugas/profile') }}">
+                                        Profile
+                                    </a>
+                                @endif
                             </li>
                             <li class="mb-2">
                                 <form method="POST" action="{{ route('logout') }}">
